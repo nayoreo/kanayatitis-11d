@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Testimoni - NayaTales</title>
+    <link href="https://fonts.googleapis.com/css2?family=Just+Another+Hand&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Gaya khusus untuk halaman ini agar lebih modern */
+        .testimoni-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .testimoni-card {
+            background: #ffffff;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid #eef2f6;
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        .testimoni-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .avatar {
+            width: 45px;
+            height: 45px;
+            background-color: #3498db;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 12px;
+            font-size: 1.2rem;
+        }
+
+        .user-text h4 {
+            margin: 0;
+            color: #1f2937;
+            font-size: 1rem;
+        }
+
+        .user-text span {
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+
+        .pesan-box {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 10px;
+            font-style: italic;
+            color: #475569;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .btn-hapus-container {
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        #hapusSemua {
+            background-color: #ef4444; /* Warna merah agar kontras */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        #hapusSemua:hover {
+            background-color: #b91c1c;
+            transform: scale(1.05);
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 50px;
+            color: #64748b;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav> 
+        <a href="index.html">Beranda</a>
+        <a href="produk.html">Produk</a>
+        <a href="bedah-buku.html">Bedah Buku</a>
+        <a href="testimoni.html">Testimoni</a>
+        <a href="tampil-testimoni.html">Testimoni Pembeli</a>
+        <a href="kontak.html">Kontak</a>
+        <a href="event.html">Event</a>
+    </nav>
+
+    <div class="container">
+        <h1>Suara Pembeli NayaTales</h1>
+        <p style="text-align: center; color: #64748b;">Terima kasih atas apresiasi dan cerita kalian!</p>
+
+        <div id="daftarTestimoni" class="testimoni-grid">
+            </div> 
+
+        <div class="btn-hapus-container">
+            <button id="hapusSemua">🗑️ Hapus Semua Testimoni</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 NayaTales - Menemukan Cerita di Setiap Halaman</p>
+    </footer>
+
+    <script>
+        const container = document.getElementById('daftarTestimoni');
+        const testimoniList = JSON.parse(localStorage.getItem('testimoniList')) || [];
+
+        if (testimoniList.length === 0) {
+            container.innerHTML = `
+                <div class="no-data">
+                    <p style="font-size: 50px;">✉️</p>
+                    <p>Belum ada testimoni nih. <br> Jadilah yang pertama memberikan ulasan!</p>
+                    <a href="testimoni.html" style="color:#3498db; text-decoration:none; font-weight:bold;">Tulis Testimoni Sekarang →</a>
+                </div>`; 
+            document.getElementById("hapusSemua").style.display = "none";
+        } else {
+            testimoniList.forEach((t) => {
+                // Ambil inisial nama (Contoh: Budi Santoso -> BS)
+                const inisial = t.nama.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+                
+                const card = document.createElement('div');
+                card.className = 'testimoni-card';
+                card.innerHTML = `
+                    <div class="user-info">
+                        <div class="avatar">${inisial}</div>
+                        <div class="user-text">
+                            <h4>${t.nama}</h4>
+                            <span>${t.email}</span>
+                        </div>
+                    </div>
+                    <div class="pesan-box">
+                        "${t.pesan}"
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        document.getElementById("hapusSemua").addEventListener("click", function() {
+            const konfirmasi = confirm("Apakah kamu yakin ingin menghapus semua testimoni?");
+            if (konfirmasi) {
+                localStorage.removeItem("testimoniList");
+                location.reload();
+            }
+        });
+    </script>
+
+</body>
+</html>
